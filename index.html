@@ -363,7 +363,8 @@
     </section>
 
     <section class="card" id="quiz">
-      <h2 class="section-title">A tiny quiz</h2>
+      <h2 class="section-title">A little quiz for you</h2>
+      <p class="hint" style="margin-top:-0.4rem;margin-bottom:0.85rem">No wrong answers, babbiiee — just pick with your heart</p>
       <p class="quiz-q" id="quizQ">What does Siddharth call you most softly?</p>
       <div class="quiz-opts" id="quizOpts"></div>
       <div class="quiz-feedback" id="quizFb"></div>
@@ -495,37 +496,83 @@
     });
     function typeAgain() {}
 
-    // Quiz
+    // Quiz — her answers, no wrong ones
     var questions = [
-      { q: "What does Siddharth call you most softly?", opts: ["bebbuu", "Boss", "Ma'am", "Partner"], a: 0 },
-      { q: "How many years of us today?", opts: ["2", "3", "4", "5"], a: 2 },
-      { q: "Who is this whole little website for?", opts: ["The internet", "Aishwarya", "A client", "No one"], a: 1 }
+      {
+        q: "What was your first thought when you started falling for me? 👀❤️",
+        opts: [
+          "He's actually kinda cute 🤭",
+          "Why is this boy so annoying? 😭",
+          "I think I'm going to fall hard for him 🥹",
+          "I didn't realise I'd end up loving him this much ❤️"
+        ]
+      },
+      {
+        q: "If you had to choose ONE memory of us to relive, which would it be? 🫶",
+        opts: [
+          "Our cute, romantic moments 💋",
+          "Our school memories, including THAT stairs incident 😭😂",
+          "Our funniest conversations and stupid jokes 🤡",
+          "A moment when you felt truly loved by me 🥹"
+        ]
+      },
+      {
+        q: "What do you think is my biggest weakness when it comes to you? 😏💗",
+        opts: [
+          "Your cute face 🥹",
+          "Your nakhre 😭",
+          "The way you get upset with me and I can't stay mad at you 😂",
+          "Literally everything about you, I'm finished 💀❤️"
+        ]
+      },
+      {
+        q: "If we got an entire day together with absolutely no interruptions, what would you want us to do? 🧸💋",
+        opts: [
+          "Cuddle and watch movies all day",
+          "Go on a cute date and eat everything we want 🍕",
+          "Talk about everything and anything for hours 🫂",
+          "A little bit of everything, because one day isn't enough ❤️"
+        ]
+      },
+      {
+        q: "Be honest, my babbiiee… what's ONE thing you want us to experience together in our future? ♾️❤️",
+        opts: [
+          "Our first proper trip together ✈️",
+          "A whole day of doing cute couple things 🥹",
+          "Building a beautiful life together 🏡",
+          "Growing old together and still annoying each other 😭💗"
+        ]
+      }
     ];
     var qi = 0;
+    var picks = [];
     function renderQuiz() {
-      var item = questions[qi % questions.length];
-      document.getElementById("quizQ").textContent = item.q;
+      var fb = document.getElementById("quizFb");
+      if (qi >= questions.length) {
+        document.getElementById("quizQ").textContent = "Done, my love ❤️";
+        document.getElementById("quizOpts").innerHTML = "";
+        fb.textContent = "I saved every answer in my heart. Happy 4 years, babbiiee.";
+        burst(50);
+        showToast("Quiz complete ♥");
+        return;
+      }
+      var item = questions[qi];
+      document.getElementById("quizQ").textContent = (qi + 1) + "/5 · " + item.q;
       var box = document.getElementById("quizOpts");
       box.innerHTML = "";
-      document.getElementById("quizFb").textContent = "";
+      fb.textContent = "";
       item.opts.forEach(function (opt, idx) {
         var b = document.createElement("button");
         b.type = "button";
         b.className = "quiz-btn";
-        b.textContent = opt;
+        b.textContent = String.fromCharCode(65 + idx) + ") " + opt;
         b.addEventListener("click", function () {
-          var buttons = box.querySelectorAll(".quiz-btn");
-          buttons.forEach(function (x) { x.disabled = true; });
-          if (idx === item.a) {
-            b.classList.add("correct");
-            document.getElementById("quizFb").textContent = "Yes! You know us ♥";
-            burst(28);
-          } else {
-            b.classList.add("wrong");
-            buttons[item.a].classList.add("correct");
-            document.getElementById("quizFb").textContent = "Almost — try the next one";
-          }
-          setTimeout(function () { qi++; renderQuiz(); }, 1600);
+          picks.push({ q: qi + 1, a: String.fromCharCode(65 + idx) });
+          box.querySelectorAll(".quiz-btn").forEach(function (x) { x.disabled = true; });
+          b.classList.add("correct");
+          fb.textContent = "Noted 💕";
+          burst(16);
+          setTimeout(function () { qi++; renderQuiz(); }, 700);
         });
         box.appendChild(b);
       });
