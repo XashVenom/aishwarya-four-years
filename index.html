@@ -114,8 +114,10 @@
     }
     h1 {
       font-family: "Cormorant Garamond", Georgia, serif;
-      font-size: clamp(2rem, 7vw, 2.7rem);
-      color: var(--deep); line-height: 1.15; margin: .4rem 0;
+      font-size: clamp(1.45rem, 5.5vw, 2.1rem);
+      color: var(--deep); line-height: 1.2; margin: .4rem 0;
+      letter-spacing: 0.02em;
+      text-transform: uppercase;
     }
     .subtitle {
       font-family: "Cormorant Garamond", Georgia, serif;
@@ -299,15 +301,9 @@
   <main class="wrap" id="content">
     <section class="card" id="top" style="text-align:center">
       <div class="badge">27 · 10 · 2022 → forever</div>
-      <div class="years"><span style="font-size:1.35rem">4</span> years with you</div>
-      <h1>Happy Anniversary</h1>
-      <p class="subtitle">for my Aishwarya</p>
-      <div class="nicks" id="nicks">
-        <button type="button" class="nick-chip" data-say="That's my bebbuu ♥">bebbuu</button>
-        <button type="button" class="nick-chip" data-say="Hi buttkkii ♥">buttkkii</button>
-        <button type="button" class="nick-chip" data-say="Hey babbiiee ♥">babbiiee</button>
-        <button type="button" class="nick-chip" data-say="Hello Sweetuuu ♥">sweetuuu</button>
-      </div>
+      <div class="years"><span style="font-size:1.35rem">4</span>&nbsp;YEARS OF US</div>
+      <h1>HAPPY 4TH YEAR ANNIVERSARY TO MYY BEEBBBUUU</h1>
+      
       <div class="days">
         <strong id="dayCount">—</strong>
         days of us
@@ -319,7 +315,6 @@
     </section>
 
     <section class="card" id="letter">
-      <h2 class="section-title">Your letter</h2>
             <div class="message" id="letterBody">
         <span class="hi">To my bebbuu, my babbiiee, my buttkkii, my favourite person in this entire world ❤️🧿</span>
         <p class="lead">HAPPY FOUR YEARS OF US, MY LOVE. ♾️❤️</p>
@@ -455,15 +450,7 @@
       if (e.key === "Enter" || e.key === " ") { e.preventDefault(); openLetter(); }
     });
 
-    // Nicknames
-    document.getElementById("nicks").addEventListener("click", function (e) {
-      var btn = e.target.closest(".nick-chip");
-      if (!btn) return;
-      document.querySelectorAll(".nick-chip").forEach(function (b) { b.classList.remove("active"); });
-      btn.classList.add("active");
-      showToast(btn.getAttribute("data-say"));
-      burst(18);
-    });
+    
 
     document.getElementById("celebrate").addEventListener("click", function () {
       burst(60);
