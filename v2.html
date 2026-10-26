@@ -375,8 +375,11 @@
       </section>
     </main>
 
+  <div id="ytWrap" style="position:fixed;width:1px;height:1px;overflow:hidden;opacity:0;pointer-events:none;bottom:0;left:0" aria-hidden="true">
+    <div id="ytPlayer"></div>
+  </div>
   <div class="music">
-    <button type="button" class="btn soft" id="musicBtn" aria-pressed="false">♪ Music</button>
+    <button type="button" class="btn soft" id="musicBtn" aria-pressed="false">♪ Aaj Se Teri</button>
   </div>
 
   <script>
@@ -436,10 +439,14 @@
     var content = document.getElementById("content");
     function openLetter() {
       envelope.classList.add("open");
+      loadYT();
       setTimeout(function () {
         gate.classList.add("hide");
         content.classList.add("show");
         burst(36);
+        wantMusic = true;
+        startMusic();
+        showToast("Aaj Se Teri ♪");
       }, 450);
     }
     envelope.addEventListener("click", openLetter);
@@ -602,32 +609,81 @@
       window.addEventListener("touchend", function () { drawing = false; });
     })();
 
-    // Soft ambient tone (Web Audio) — optional
-    var audioOn = false, ctxA, osc, gain;
+    // Background: Aaj Se Teri (Arijit Singh) via YouTube — starts after she opens the letter
+    var YT_ID = "EQaaFuF6_6s";
+    var ytReady = false, ytPlayer = null, musicOn = false, wantMusic = true;
+    function loadYT() {
+      if (document.getElementById("ytApi")) return;
+      var s = document.createElement("script");
+      s.id = "ytApi";
+      s.src = "https://www.youtube.com/iframe_api";
+      document.body.appendChild(s);
+    }
+    window.onYouTubeIframeAPIReady = function () {
+      ytPlayer = new YT.Player("ytPlayer", {
+        height: "1",
+        width: "1",
+        videoId: YT_ID,
+        playerVars: {
+          autoplay: 0,
+          controls: 0,
+          disablekb: 1,
+          fs: 0,
+          modestbranding: 1,
+          playsinline: 1,
+          rel: 0,
+          loop: 1,
+          playlist: YT_ID
+        },
+        events: {
+          onReady: function () {
+            ytReady = true;
+            if (wantMusic && document.getElementById("content").classList.contains("show")) {
+              startMusic();
+            }
+          },
+          onStateChange: function (e) {
+            if (e.data === YT.PlayerState.ENDED && musicOn) {
+              try { ytPlayer.seekTo(0); ytPlayer.playVideo(); } catch (err) {}
+            }
+          }
+        }
+      });
+    };
+    function startMusic() {
+      if (!ytReady || !ytPlayer) { loadYT(); return; }
+      try {
+        ytPlayer.unMute();
+        ytPlayer.setVolume(70);
+        ytPlayer.playVideo();
+        musicOn = true;
+        var btn = document.getElementById("musicBtn");
+        btn.textContent = "♪ Playing";
+        btn.setAttribute("aria-pressed", "true");
+      } catch (err) {}
+    }
+    function stopMusic() {
+      if (!ytPlayer) return;
+      try { ytPlayer.pauseVideo(); } catch (err) {}
+      musicOn = false;
+      var btn = document.getElementById("musicBtn");
+      btn.textContent = "♪ Aaj Se Teri";
+      btn.setAttribute("aria-pressed", "false");
+    }
     document.getElementById("musicBtn").addEventListener("click", function () {
-      if (!audioOn) {
-        ctxA = new (window.AudioContext || window.webkitAudioContext)();
-        osc = ctxA.createOscillator();
-        gain = ctxA.createGain();
-        osc.type = "sine";
-        osc.frequency.value = 220;
-        gain.gain.value = 0.02;
-        osc.connect(gain); gain.connect(ctxA.destination);
-        osc.start();
-        // gentle pulse
-        var t0 = ctxA.currentTime;
-        gain.gain.setValueAtTime(0.02, t0);
-        audioOn = true;
-        this.textContent = "♪ On";
-        this.setAttribute("aria-pressed", "true");
-        showToast("Soft tone on — tap again to stop");
-      } else {
-        try { osc.stop(); ctxA.close(); } catch (e) {}
-        audioOn = false;
-        this.textContent = "♪ Music";
-        this.setAttribute("aria-pressed", "false");
+      loadYT();
+      if (!ytReady) {
+        wantMusic = true;
+        showToast("Starting Aaj Se Teri…");
+        // player will start onReady if letter already open
+        setTimeout(function () { if (ytReady) { if (musicOn) stopMusic(); else startMusic(); } }, 1200);
+        return;
       }
+      if (musicOn) stopMusic(); else startMusic();
     });
+    loadYT();
+
+
 
     // Nav highlight
     var links = document.querySelectorAll(".nav-dots a");
