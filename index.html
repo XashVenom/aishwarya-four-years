@@ -178,33 +178,6 @@
       font-family: "Cormorant Garamond", Georgia, serif;
       font-size: 2.6rem; color: var(--deep); line-height: 1;
     }
-    .grid2 {
-      display: grid; grid-template-columns: 1fr 1fr; gap: .65rem;
-    }
-    .flip {
-      perspective: 900px; min-height: 110px; cursor: pointer;
-    }
-    .flip-inner {
-      position: relative; width: 100%; height: 100%; min-height: 110px;
-      transition: transform .55s; transform-style: preserve-3d;
-    }
-    .flip.flipped .flip-inner { transform: rotateY(180deg); }
-    .flip-face {
-      position: absolute; inset: 0;
-      backface-visibility: hidden;
-      border-radius: 16px;
-      display: flex; align-items: center; justify-content: center;
-      padding: .85rem; text-align: center;
-      border: 1px solid rgba(255,107,138,.25);
-    }
-    .flip-front {
-      background: linear-gradient(145deg, #fff, #ffe8f0);
-      color: var(--deep); font-weight: 600;
-    }
-    .flip-back {
-      background: linear-gradient(145deg, #ff8fa8, #e84a6f);
-      color: #fff; transform: rotateY(180deg); font-size: .92rem; line-height: 1.35;
-    }
     .timeline { position: relative; padding-left: 1.1rem; }
     .timeline::before {
       content: ""; position: absolute; left: 6px; top: .2rem; bottom: .2rem;
@@ -317,7 +290,6 @@
   <nav class="nav-dots" aria-label="Sections">
     <a href="#top" class="on" title="Home">home</a>
     <a href="#letter" title="Letter">letter</a>
-    <a href="#memories" title="Memories">memories</a>
     <a href="#timeline" title="Timeline">years</a>
     <a href="#quiz" title="Quiz">quiz</a>
     <a href="#secret" title="Secret">secret</a>
@@ -378,37 +350,6 @@
       <div class="actions">
         <button type="button" class="btn soft" id="typeAgain">Read it again ✦</button>
       </div>
-    </section>
-
-    <section class="card" id="memories">
-      <h2 class="section-title">Tap a memory</h2>
-      <div class="grid2" id="memoryGrid">
-        <div class="flip" data-back="Falling down the school stairs together — twice. Never forgetting that, buttkkii.">
-          <div class="flip-inner">
-            <div class="flip-face flip-front">Memory 1 ♥<br/><small>tap me</small></div>
-            <div class="flip-face flip-back"></div>
-          </div>
-        </div>
-        <div class="flip" data-back="Our little world of jokes, habits, and conversations nobody else would get.">
-          <div class="flip-inner">
-            <div class="flip-face flip-front">Memory 2 ♥<br/><small>tap me</small></div>
-            <div class="flip-face flip-back"></div>
-          </div>
-        </div>
-        <div class="flip" data-back="Wanting to hold you close and make the hard days feel lighter.">
-          <div class="flip-inner">
-            <div class="flip-face flip-front">Memory 3 ♥<br/><small>tap me</small></div>
-            <div class="flip-face flip-back"></div>
-          </div>
-        </div>
-        <div class="flip" data-back="Four years in, and you're still my favourite person in this entire world.">
-          <div class="flip-inner">
-            <div class="flip-face flip-front">Memory 4 ♥<br/><small>tap me</small></div>
-            <div class="flip-face flip-back"></div>
-          </div>
-        </div>
-      </div>
-      <p class="hint">Flip all four for a surprise</p>
     </section>
 
     <section class="card" id="timeline">
@@ -532,24 +473,7 @@
       burst(24);
     });
 
-    // Flip cards
-    var flipped = 0;
-    document.querySelectorAll(".flip").forEach(function (card) {
-      var back = card.querySelector(".flip-back");
-      back.textContent = card.getAttribute("data-back");
-      card.addEventListener("click", function () {
-        if (!card.classList.contains("flipped")) {
-          card.classList.add("flipped");
-          flipped++;
-          if (flipped === 4) {
-            burst(50);
-            showToast("You found all the memories ♥");
-          }
-        } else {
-          card.classList.remove("flipped");
-        }
-      });
-    });
+    
 
     // Typewriter re-read
     var letterEl = document.getElementById("letterBody");
@@ -687,7 +611,7 @@
 
     // Nav highlight
     var links = document.querySelectorAll(".nav-dots a");
-    var sections = ["top", "letter", "memories", "timeline", "quiz", "secret"].map(function (id) {
+    var sections = ["top", "letter", "timeline", "quiz", "secret"].map(function (id) {
       return document.getElementById(id);
     });
     window.addEventListener("scroll", function () {
