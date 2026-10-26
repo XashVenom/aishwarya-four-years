@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta name="cache-bust" content="fresh-db89b90-v3">
+  <meta name="cache-bust" content="fresh-v4-cele-hug">
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
   <meta http-equiv="Cache-Control" content="no-cache" />
@@ -333,12 +333,51 @@
       font-size: .85rem; color: #a06676; margin: .35rem 0 0;
     }
 
+
+    .cele-overlay {
+      position: fixed; inset: 0; z-index: 85;
+      display: flex; align-items: center; justify-content: center;
+      padding: 1.2rem;
+      background: rgba(74, 20, 40, .55);
+      opacity: 0; pointer-events: none;
+      transition: opacity .3s ease;
+      backdrop-filter: blur(3px);
+    }
+    .cele-overlay.show { opacity: 1; pointer-events: auto; }
+    .cele-card {
+      background: linear-gradient(160deg, #fff7fa, #ffe3ec);
+      border: 2px solid #ff8fad;
+      border-radius: 24px;
+      padding: 1.6rem 1.3rem;
+      max-width: min(94vw, 380px);
+      text-align: center;
+      box-shadow: 0 24px 60px rgba(196,61,92,.35);
+      transform: scale(.9);
+      transition: transform .35s cubic-bezier(.2,1.3,.3,1);
+    }
+    .cele-overlay.show .cele-card { transform: scale(1); }
+    .cele-card h2 {
+      margin: 0;
+      font-family: "Cormorant Garamond", Georgia, serif;
+      font-size: clamp(1.25rem, 5.2vw, 1.75rem);
+      line-height: 1.25;
+      color: #c43d5c;
+      letter-spacing: .02em;
+    }
+    .cele-card p { margin: .7rem 0 0; color: #a06676; font-size: .85rem; }
+
   </style>
 </head>
 <body>
   <div class="hearts" id="hearts" aria-hidden="true"></div>
   <div class="confetti-layer" id="confetti" aria-hidden="true"></div>
   <div class="toast" id="toast"></div>
+  <div class="cele-overlay" id="celeOverlay" aria-hidden="true">
+    <div class="cele-card">
+      <h2>HAPPY 4TH YEAR ANNIVERSARY MYY PRETTIIEE BEEBBBUUUU!!!</h2>
+      <p>tap anywhere to close · 🎉💗</p>
+    </div>
+  </div>
   <div class="hug-overlay" id="hugOverlay" aria-hidden="true">
     <div class="hug-card">
       <div class="hug-pair" aria-hidden="true">
@@ -531,11 +570,20 @@
     
 
     document.getElementById("celebrate").addEventListener("click", function () {
-      burst(60);
-      showToast("HAPPY 4TH YEAR ANNIVERSARY MYY PRETTIIEE BEEBBBUUUU!!!");
-      clearTimeout(showToast._t);
-      showToast._t = setTimeout(function () { toast.classList.remove("show"); }, 3800);
-      for (var j = 0; j < 20; j++) setTimeout(spawnHeart, j * 60);
+      var ov = document.getElementById("celeOverlay");
+      ov.classList.add("show");
+      ov.setAttribute("aria-hidden", "false");
+      burst(80);
+      for (var j = 0; j < 28; j++) setTimeout(spawnHeart, j * 50);
+      clearTimeout(window._celeT);
+      window._celeT = setTimeout(function () {
+        ov.classList.remove("show");
+        ov.setAttribute("aria-hidden", "true");
+      }, 4200);
+    });
+    document.getElementById("celeOverlay").addEventListener("click", function () {
+      this.classList.remove("show");
+      this.setAttribute("aria-hidden", "true");
     });
     document.getElementById("hug").addEventListener("click", function () {
       var ov = document.getElementById("hugOverlay");
