@@ -3,6 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta http-equiv="Cache-Control" content="no-cache" />
   <meta name="theme-color" content="#fff0f5" />
   <title>For Aishwarya ♥</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -365,7 +366,7 @@
     <section class="card" id="quiz">
       <h2 class="section-title">A little quiz for you</h2>
       <p class="hint" style="margin-top:-0.4rem;margin-bottom:0.85rem">No wrong answers, babbiiee — just pick with your heart</p>
-      <p class="quiz-q" id="quizQ">What does Siddharth call you most softly?</p>
+      <p class="quiz-q" id="quizQ">1/5 · What was your first thought when you started falling for me? 👀❤️</p>
       <div class="quiz-opts" id="quizOpts"></div>
       <div class="quiz-feedback" id="quizFb"></div>
     </section>
@@ -476,25 +477,13 @@
 
     
 
-    // Typewriter re-read
+    // Re-read letter (no typewriter — keeps your full letter safe)
     var letterEl = document.getElementById("letterBody");
-    var letterHTML = letterEl.innerHTML;
     document.getElementById("typeAgain").addEventListener("click", function () {
-      var text = letterEl.innerText;
-      letterEl.innerHTML = '<span class="hi">Hey Bebbuu,</span><p id="tw"></p>';
-      var tw = document.getElementById("tw");
-      var i = 0;
-      var full = text.replace(/^Hey Bebbuu,?\s*/i, "");
-      clearInterval(typeAgain._iv);
-      typeAgain._iv = setInterval(function () {
-        tw.textContent = full.slice(0, ++i);
-        if (i >= full.length) {
-          clearInterval(typeAgain._iv);
-          setTimeout(function () { letterEl.innerHTML = letterHTML; }, 1600);
-        }
-      }, 18);
+      document.getElementById("letter").scrollIntoView({ behavior: "smooth", block: "start" });
+      burst(36);
+      showToast("For you, always ♥");
     });
-    function typeAgain() {}
 
     // Quiz — her answers, no wrong ones
     var questions = [
@@ -577,7 +566,7 @@
         box.appendChild(b);
       });
     }
-    renderQuiz();
+    try { renderQuiz(); } catch (err) { console.error(err); document.getElementById("quizFb").textContent = "Quiz loading… refresh once"; }
 
     // Scratch card
     (function () {
