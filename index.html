@@ -245,9 +245,10 @@
     .toast {
       position: fixed; left: 50%; bottom: 88px; transform: translateX(-50%) translateY(20px);
       background: rgba(74,44,53,.92); color: #fff;
-      padding: .7rem 1.1rem; border-radius: 999px;
-      opacity: 0; transition: .35s; z-index: 60; font-size: .9rem;
-      pointer-events: none; white-space: nowrap;
+      padding: .7rem 1.1rem; border-radius: 18px;
+      opacity: 0; transition: .35s; z-index: 60; font-size: .88rem;
+      pointer-events: none; white-space: normal; text-align: center;
+      max-width: min(92vw, 340px); line-height: 1.35;
     }
     .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
 
@@ -271,12 +272,84 @@
     footer.note {
       text-align: center; font-size: .78rem; color: #a06676; margin-top: .5rem;
     }
+
+    .hug-overlay {
+      position: fixed; inset: 0; z-index: 80;
+      display: flex; align-items: center; justify-content: center;
+      background: rgba(255, 236, 242, .72);
+      opacity: 0; pointer-events: none;
+      transition: opacity .35s ease;
+      backdrop-filter: blur(4px);
+    }
+    .hug-overlay.show { opacity: 1; pointer-events: auto; }
+    .hug-card {
+      text-align: center;
+      padding: 1.6rem 1.8rem 1.4rem;
+      background: #fff;
+      border-radius: 28px;
+      box-shadow: 0 20px 50px rgba(196,61,92,.22);
+      transform: scale(.86);
+      transition: transform .4s cubic-bezier(.2,1.2,.3,1);
+      max-width: 90vw;
+    }
+    .hug-overlay.show .hug-card { transform: scale(1); }
+    .hug-pair {
+      position: relative; height: 110px; width: 220px; margin: 0 auto .6rem;
+    }
+    .hug-fig {
+      position: absolute; top: 18px; font-size: 3.4rem; line-height: 1;
+      transition: transform .7s cubic-bezier(.2,1.1,.3,1);
+    }
+    .hug-fig.left { left: 18px; transform: translateX(-36px); }
+    .hug-fig.right { right: 18px; transform: translateX(36px) scaleX(-1); }
+    .hug-overlay.show .hug-fig.left { transform: translateX(18px); }
+    .hug-overlay.show .hug-fig.right { transform: translateX(-18px) scaleX(-1); }
+    .hug-heart {
+      position: absolute; left: 50%; top: 8px; transform: translateX(-50%) scale(0);
+      font-size: 2.2rem;
+      transition: transform .45s .35s cubic-bezier(.2,1.4,.3,1);
+      filter: drop-shadow(0 4px 10px rgba(232,93,138,.45));
+    }
+    .hug-overlay.show .hug-heart {
+      transform: translateX(-50%) scale(1);
+      animation: hugPulse 1s .8s ease-in-out infinite;
+    }
+    @keyframes hugPulse {
+      0%, 100% { transform: translateX(-50%) scale(1); }
+      50% { transform: translateX(-50%) scale(1.18); }
+    }
+    .hug-arms {
+      position: absolute; left: 50%; bottom: 6px; transform: translateX(-50%) scaleX(0);
+      font-size: 1.8rem; opacity: .95;
+      transition: transform .5s .25s cubic-bezier(.2,1.2,.3,1);
+    }
+    .hug-overlay.show .hug-arms { transform: translateX(-50%) scaleX(1); }
+    .hug-caption {
+      font-family: "Cormorant Garamond", Georgia, serif;
+      font-size: 1.35rem; color: var(--deep); margin: 0;
+    }
+    .hug-sub {
+      font-size: .85rem; color: #a06676; margin: .35rem 0 0;
+    }
+
   </style>
 </head>
 <body>
   <div class="hearts" id="hearts" aria-hidden="true"></div>
   <div class="confetti-layer" id="confetti" aria-hidden="true"></div>
   <div class="toast" id="toast"></div>
+  <div class="hug-overlay" id="hugOverlay" aria-hidden="true">
+    <div class="hug-card">
+      <div class="hug-pair" aria-hidden="true">
+        <span class="hug-fig left">🥰</span>
+        <span class="hug-heart">💗</span>
+        <span class="hug-arms">🤗</span>
+        <span class="hug-fig right">🥰</span>
+      </div>
+      <p class="hug-caption">Siddharth is hugging you</p>
+      <p class="hug-sub">tight squeeze, my love ♥</p>
+    </div>
+  </div>
 
   <div class="gate" id="gate">
     <div class="envelope" id="envelope" role="button" tabindex="0" aria-label="Open your letter">
@@ -458,12 +531,26 @@
 
     document.getElementById("celebrate").addEventListener("click", function () {
       burst(60);
-      showToast("Happy 4 years, Aishwarya ♥");
+      showToast("HAPPY 4TH YEAR ANNIVERSARY MYY PRETTIIEE BEEBBBUUUU!!!");
+      clearTimeout(showToast._t);
+      showToast._t = setTimeout(function () { toast.classList.remove("show"); }, 3800);
       for (var j = 0; j < 20; j++) setTimeout(spawnHeart, j * 60);
     });
     document.getElementById("hug").addEventListener("click", function () {
-      showToast("Siddharth sent you a warm hug ♥");
-      burst(24);
+      var ov = document.getElementById("hugOverlay");
+      ov.classList.add("show");
+      ov.setAttribute("aria-hidden", "false");
+      burst(28);
+      for (var j = 0; j < 12; j++) setTimeout(spawnHeart, j * 70);
+      clearTimeout(window._hugT);
+      window._hugT = setTimeout(function () {
+        ov.classList.remove("show");
+        ov.setAttribute("aria-hidden", "true");
+      }, 2800);
+    });
+    document.getElementById("hugOverlay").addEventListener("click", function () {
+      this.classList.remove("show");
+      this.setAttribute("aria-hidden", "true");
     });
 
     
